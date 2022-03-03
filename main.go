@@ -6,13 +6,13 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"google.golang.org/grpc"
 
-	helloworldpb "github.com/luenci/proto/proto/gen/go/hello"
+	helloworldpb "github.com/luenci/proto/proto/gen"
 )
 
-type server struct{
+type server struct {
 	helloworldpb.UnimplementedGreeterServer
 }
 

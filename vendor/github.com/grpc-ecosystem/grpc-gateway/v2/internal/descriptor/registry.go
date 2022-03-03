@@ -78,6 +78,9 @@ type Registry struct {
 	// enumsAsInts render enum as integer, as opposed to string
 	enumsAsInts bool
 
+	// omitEnumDefaultValue omits default value of enum
+	omitEnumDefaultValue bool
+
 	// disableDefaultErrors disables the generation of the default error types.
 	// This is useful for users who have defined custom error handling.
 	disableDefaultErrors bool
@@ -132,6 +135,7 @@ type repeatedFieldSeparator struct {
 type annotationIdentifier struct {
 	method       string
 	pathTemplate string
+	service      *Service
 }
 
 // NewRegistry returns a new Registry.
@@ -557,6 +561,16 @@ func (r *Registry) GetEnumsAsInts() bool {
 	return r.enumsAsInts
 }
 
+// SetOmitEnumDefaultValue sets omitEnumDefaultValue
+func (r *Registry) SetOmitEnumDefaultValue(omit bool) {
+	r.omitEnumDefaultValue = omit
+}
+
+// GetOmitEnumDefaultValue returns omitEnumDefaultValue
+func (r *Registry) GetOmitEnumDefaultValue() bool {
+	return r.omitEnumDefaultValue
+}
+
 // SetDisableDefaultErrors sets disableDefaultErrors
 func (r *Registry) SetDisableDefaultErrors(use bool) {
 	r.disableDefaultErrors = use
@@ -710,8 +724,8 @@ func (r *Registry) FieldName(f *Field) string {
 	return f.GetName()
 }
 
-func (r *Registry) CheckDuplicateAnnotation(httpMethod string, httpTemplate string) error {
-	a := annotationIdentifier{method: httpMethod, pathTemplate: httpTemplate}
+func (r *Registry) CheckDuplicateAnnotation(httpMethod string, httpTemplate string, svc *Service) error {
+	a := annotationIdentifier{method: httpMethod, pathTemplate: httpTemplate, service: svc}
 	_, ok := r.annotationMap[a]
 	if ok {
 		return fmt.Errorf("duplicate annotation: method=%s, template=%s", httpMethod, httpTemplate)
